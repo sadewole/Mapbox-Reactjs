@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
+import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 import './map.css';
 
 const GenerateMap = () => {
   const mapContainerRef = useRef(null);
+  // mapboxgl.accessToken =
+  //   'pk.eyJ1Ijoic2FtYWRvciIsImEiOiJja3FzbWFmcnAxY2R6MnBxYXZkOXpmcnhxIn0.r8bu07XqO_VtwR-9m9NsZA';
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
   const fetchData = useCallback(() => {

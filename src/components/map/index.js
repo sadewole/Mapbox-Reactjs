@@ -16,7 +16,7 @@ const GenerateMap = () => {
     // geocoding with countries
     return geocodingClient
       .forwardGeocode({
-        query: 'Ikeja, Lagos',
+        query: 'Akute, Ogun',
         countries: ['ng'],
         limit: 2,
       })
@@ -25,9 +25,11 @@ const GenerateMap = () => {
         const match = response.body;
         const coordinates = match.features[0].geometry.coordinates;
         const placeName = match.features[0].place_name;
+        const center = match.features[0].center;
 
         return {
           type: 'Feature',
+          center: center,
           geometry: {
             type: 'Point',
             coordinates: coordinates,
@@ -51,7 +53,7 @@ const GenerateMap = () => {
     results.then((marker) => {
       // create a HTML element for each feature
       var el = document.createElement('div');
-      el.className = 'circle';
+      el.className = 'marker';
 
       // make a marker for each feature and add it to the map
       new mapboxgl.Marker(el)
@@ -61,6 +63,12 @@ const GenerateMap = () => {
             .setHTML('<p>' + marker.properties.description + '</p>')
         )
         .addTo(map);
+
+      map.on('load', async () => {
+        map.flyTo({
+          center: marker.center,
+        });
+      });
     });
 
     // clean up on unmount
@@ -69,10 +77,7 @@ const GenerateMap = () => {
 
   return (
     <div>
-      <div
-        ref={mapContainerRef}
-        style={{ width: '100%', height: '500px', borderRadius: '5px' }}
-      />
+      <div ref={mapContainerRef} className='map-container' />
     </div>
   );
 };

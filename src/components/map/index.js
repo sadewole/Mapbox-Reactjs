@@ -16,7 +16,7 @@ const GenerateMap = () => {
     // geocoding with countries
     return geocodingClient
       .forwardGeocode({
-        query: 'Akute, Ogun',
+        query: 'Ikeja, Lagos',
         countries: ['ng'],
         limit: 2,
       })
@@ -53,7 +53,7 @@ const GenerateMap = () => {
     results.then((marker) => {
       // create a HTML element for each feature
       var el = document.createElement('div');
-      el.className = 'marker';
+      el.className = 'circle';
 
       // make a marker for each feature and add it to the map
       new mapboxgl.Marker(el)

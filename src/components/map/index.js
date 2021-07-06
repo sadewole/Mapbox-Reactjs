@@ -5,6 +5,7 @@ import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import './map.css';
 
 const GenerateMap = () => {
+  const map = useRef(null);
   const mapContainerRef = useRef(null);
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
@@ -42,13 +43,23 @@ const GenerateMap = () => {
   }, []);
 
   useEffect(() => {
-    const results = fetchData();
-    const map = new mapboxgl.Map({
+    if (map.current) return; // Checks if there's an already existing map initialised.
+
+    map.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       zoom: 9,
       center: [3.361881, 6.672557],
     });
+
+    // clean up on unmount
+    return () => map.current.remove();
+  }, []);
+
+  useEffect(() => {
+    if (!map.current) return; // Waits for the map to initialise
+
+    const results = fetchData();
 
     results.then((marker) => {
       // create a HTML element for each feature
@@ -62,17 +73,14 @@ const GenerateMap = () => {
           new mapboxgl.Popup({ offset: 25 }) // add popups
             .setHTML('<p>' + marker.properties.description + '</p>')
         )
-        .addTo(map);
+        .addTo(map.current);
 
-      map.on('load', async () => {
-        map.flyTo({
+      map.current.on('load', async () => {
+        map.current.flyTo({
           center: marker.center,
         });
       });
     });
-
-    // clean up on unmount
-    return () => map.remove();
   }, [fetchData]);
 
   return (

@@ -6,8 +6,6 @@ import './map.css';
 
 const GenerateMap = () => {
   const mapContainerRef = useRef(null);
-  // mapboxgl.accessToken =
-  //   'pk.eyJ1Ijoic2FtYWRvciIsImEiOiJja3FzbWFmcnAxY2R6MnBxYXZkOXpmcnhxIn0.r8bu07XqO_VtwR-9m9NsZA';
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
 
   const fetchData = useCallback(() => {
